@@ -1,0 +1,31 @@
+﻿@model LoadBalancer.Models.ViewModels.RegisterViewModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<head>
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/account.css" />
+</head>
+
+
+<div class="user-login-form">
+    <form asp-action="Register" method="post">
+        <div asp-validation-summary="All" class="input-error"></div>
+        <div>
+            <label asp-for="Email" class="cred-label">Email</label>
+            <input asp-for="Email" class="cred-input" placeholder="Email@gmail.com" />
+        </div>
+        <div>
+            <label asp-for="Password" class="cred-label">Password</label>
+            <input asp-for="Password" class="cred-input" placeholder="8+ characters" />
+        </div>
+        <div>
+            <label asp-for="PasswordConfirmation" class="cred-label">Confirm Password</label>
+            <input asp-for="PasswordConfirmation" class="cred-input" placeholder="8+ characters" />
+        </div>
+        <div>
+            <button type="submit" class="submit_button">Register</button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,18 @@
+﻿.user-login-form {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    width: 400px;
+}
+    .user-login-form .input-error {
+        color: #D72130;
+    }
+    
+    .user-login-form .cred-label {
+
+    }
+    
+    .user-login-form .cred-input{
+        width:100%;
+        margin-bottom: 10px;
+    }
