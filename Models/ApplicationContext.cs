@@ -15,6 +15,10 @@ namespace LoadBalancer.Models
             Database.EnsureCreated();
         }
 
+        public DbSet<DataResult> DataResults { get; set; }
+        public DbSet<ReplaceAction> ReplaceActions { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

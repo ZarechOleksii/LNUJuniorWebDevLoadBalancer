@@ -44,7 +44,7 @@ namespace LoadBalancer.Controllers
         {
             if (ModelState.IsValid)
             {
-                User created = new() { Email = model.Email, UserName = model.Email };
+                User created = new() { Email = model.Email, UserName = model.Email, Jobs = new List<DataResult>() };
                 var result = await _userManager.CreateAsync(created, model.Password);
 
                 if (result.Succeeded)
