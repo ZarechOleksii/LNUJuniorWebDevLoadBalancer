@@ -1,1 +1,33 @@
 ﻿
+.error-msg{
+    color:red;
+    border: 1px solid red;
+}
+
+.three-column{
+    width: 33.3%;
+}
+
+.column-holder{
+    width:100%;
+    display:flex;
+    flex-direction:row;
+}
+
+.action-list{
+    list-style-type:none;
+    width: 100%;
+}
+.action-list-item{
+    width: 100%;
+    margin-bottom:10px;
+}
+.toDo-list{
+    width:100%;
+}
+.toDo-item {
+    width: 100%;
+    margin-bottom: 10px;
+    border: 1px solid black;
+    background-color: lightgray;
+}

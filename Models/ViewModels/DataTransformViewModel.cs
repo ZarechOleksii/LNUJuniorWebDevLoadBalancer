@@ -9,6 +9,6 @@ namespace LoadBalancer.Models.ViewModels
     public class DataTransformViewModel
     {
         public string Data { get; set; }
-        public ReplaceAction ToDo { get;set; }
+        public List<ReplaceAction> ToDo { get;set; }
     }
 }

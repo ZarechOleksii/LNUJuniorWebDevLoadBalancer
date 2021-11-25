@@ -29,16 +29,41 @@ namespace LoadBalancer.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateDataResultAsync()
+        public async Task<IActionResult> StartJobAsync([FromBody] DataTransformViewModel model)
         {
-            var user = await _userManager.GetUserAsync(User);
-            var DataResult = new DataResult(user.Id);
-            await _context.DataResults.AddAsync(DataResult);
-            await _context.SaveChangesAsync();
-            return Ok(DataResult);
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.GetUserAsync(User);
+
+                var DataResult = new DataResult(user.Id);
+
+                DataResult.Actions = model.ToDo;
+                DataResult.Before = model.Data;
+
+                string content = DataResult.Before;
+
+                foreach (var x in DataResult.Actions.OrderBy(v => v.Order))
+                {
+                    content = x.DoAction(content);
+                }
+
+                DataResult.After = content;
+                DataResult.TimeSpan = DateTime.Now - DataResult.DateTime;
+                DataResult.InProgress = false;
+
+                await _context.DataResults.AddAsync(DataResult);
+
+                await _context.SaveChangesAsync();
+
+                return Ok(DataResult);
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
-        [HttpPost]
+/*        [HttpPost]
         public async Task<IActionResult> DoActionAsync(DataTransformViewModel model)
         {
             if (ModelState.IsValid)
@@ -75,6 +100,6 @@ namespace LoadBalancer.Controllers
             {
                 return BadRequest();
             }
-        }
+        }*/
     }
 }

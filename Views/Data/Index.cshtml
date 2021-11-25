@@ -1,15 +1,43 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Data";
 }
-
 <head>
-    <title>@ViewData["Title"]</title>
-    <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/data.css" />
 </head>
 
-<body>
-    <div class="text-center">
-        <h1>Text converter</h1>
+<div class="text-center">
+    <h1>Text converter</h1>
+    <div class="column-holder">
+        <div class="three-column">
+            <h4>Available actions:</h4>
+            <ul class="action-list">
+                <li>
+                    <button class="action-list-item" onclick="replaceItem()">Replace text with text</button>
+                </li>
+                <li>
+                    <button class="action-list-item" onclick="removeItem()">Remove text</button>
+                </li>
+                <li>
+                    <button class="action-list-item" onclick="insertAItem()">Insert text After text</button>
+                </li>
+                <li>
+                    <button class="action-list-item" onclick="InsertBItem()">Insert text before text</button>
+                </li>
+            </ul>
+        </div>
+        <div class="three-column">
+            <h4>To do:</h4>
+            <ol class="action-list" id="toDo">
+
+            </ol>
+        </div>
+        <div class="three-column">
+            <h3 class="error-msg"></h3>
+            <input type="file" id="upload" />
+            <button onclick="convert()">X</button>
+        </div>
     </div>
-</body>
+    
+</div>
+
+<script language="JavaScript" type="text/javascript" src="~/js/data.js"></script>

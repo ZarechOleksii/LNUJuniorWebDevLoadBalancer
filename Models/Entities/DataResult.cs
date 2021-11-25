@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace LoadBalancer.Models.Entities
@@ -23,7 +24,7 @@ namespace LoadBalancer.Models.Entities
 
         [DataType(DataType.DateTime)]
         public DateTime DateTime { get; set; }
-
+        [JsonIgnore]
         public User User { get; set; }
 
         [Required]
@@ -40,7 +41,6 @@ namespace LoadBalancer.Models.Entities
             Before = "";
             After = "";
             UserId = userId;
-            Actions = new();
             DateTime = DateTime.Now;
             TimeSpan = TimeSpan.Zero;
             InProgress = true;

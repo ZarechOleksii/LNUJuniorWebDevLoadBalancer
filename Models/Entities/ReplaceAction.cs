@@ -16,18 +16,19 @@ namespace LoadBalancer.Models.Entities
         public string ParameterFrom { get; set; }
         public string ParameterTo { get; set; }
         public bool IsDone { get; set; }
-        public DataResult DataResult { get; set; }
-
-        [Required]
-        public Guid DataResultId { get; set; }
         public int Order { get; set; }
 
-        public ReplaceAction(string from, string to, int order, Guid id)
+        public ReplaceAction()
         {
-            ParameterFrom = from;
-            ParameterTo = to;
+            IsDone = false;
+        }
+
+        public ReplaceAction(string action, string parameterFrom, string parameterTo, int order)
+        {
+            Action = action;
+            ParameterFrom = parameterFrom;
+            ParameterTo = parameterTo;
             Order = order;
-            DataResultId = id;
             IsDone = false;
         }
 
