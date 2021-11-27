@@ -28,6 +28,7 @@ namespace LoadBalancer.Controllers
             return View();
         }
 
+        [DisableRequestSizeLimit]
         [HttpPost]
         public async Task<IActionResult> StartJobAsync([FromBody] DataTransformViewModel model)
         {

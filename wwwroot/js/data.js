@@ -4,6 +4,7 @@ script.type = 'text/javascript';
 document.getElementsByTagName('head')[0].appendChild(script);
 
 let current_version = null;
+let filename = null;
 let current_actions = [];
 
 document.getElementById('upload').addEventListener('change', readFileAsString)
@@ -17,14 +18,15 @@ function readFileAsString() {
 
     var reader = new FileReader();
     reader.onload = function (event) {
-        console.log('File content:', event.target.result);
         console.log(event.target.result.length)
-        if (event.target.result.length > 10000000) {
+        console.log('500000000')
+        if (event.target.result.length > 500000000) {
             document.getElementById('upload').value = null;
             document.getElementsByClassName("error-msg")[0].innerText = 'File is too large!';
         }
         else {
             current_version = event.target.result;
+            filename = files[0].name;
             document.getElementsByClassName("error-msg")[0].innerText = '';
         }
     };
@@ -106,7 +108,6 @@ function convert() {
             Data: current_version,
             ToDo: current_actions
         }
-        console.log(JSON.stringify(toSend))
         
         $.ajax({
             type: 'POST',
@@ -114,12 +115,13 @@ function convert() {
             contentType: "application/json",
             url: '/Data/StartJob',
             success: function (data) {
-                console.log(data)
+                document.getElementById('download_button').setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data.after))
+                document.getElementById('download_button').setAttribute('download', filename.split('.').slice(0, -1).join('.') + 'Transformed.txt')
+                document.getElementById('download_button').style.display = 'block'
             },
             error: function (data) {
                 console.log(data)
             }
         });
-
     }
 }

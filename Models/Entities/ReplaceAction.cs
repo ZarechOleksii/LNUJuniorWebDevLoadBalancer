@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace LoadBalancer.Models.Entities
@@ -34,7 +35,7 @@ namespace LoadBalancer.Models.Entities
 
         public string DoAction(string data)
         {
-            var result = data.Replace(ParameterFrom, ParameterTo);
+            var result = new StringBuilder(data).Replace(ParameterFrom, ParameterTo).ToString();
             IsDone = true;
             return result;
         }
