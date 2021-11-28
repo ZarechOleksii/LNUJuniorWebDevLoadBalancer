@@ -34,45 +34,134 @@ function readFileAsString() {
 }
 
 function replaceItem() {
-    let listElement = createGeneralItem('Replace string with string:')
-    let box = listElement.getElementsByTagName('div')[0]
+    if (current_actions.length < 20) {
+        let listElement = createGeneralItem((current_actions.length + 1) + '. Replace text with text:')
+        let box = listElement.getElementsByTagName('div')[0]
 
-    let newAction = {
-        Action: 'Replace',
-        ParameterFrom: '',
-        ParameterTo: '',
-        Order: current_actions.length + 1,
-        DataResultId: null
+        let newAction = {
+            Action: 'Replace',
+            ParameterFrom: '',
+            ParameterTo: '',
+            Order: current_actions.length + 1,
+            DataResultId: null
+        }
+
+        current_actions.push(newAction)
+
+        let fromInput = document.createElement('input')
+        fromInput.placeholder = 'Replace this string (required)...'
+        fromInput.style.width = '100%'
+        fromInput.number = current_actions.length - 1;
+        fromInput.addEventListener('input', changeFromParameter)
+        let toInput = document.createElement('input')
+        toInput.placeholder = 'With this string...'
+        toInput.style.width = '100%'
+        toInput.number = current_actions.length - 1;
+        toInput.addEventListener('input', changeToParameter)
+        box.append(fromInput)
+        box.append(toInput)
+
+        document.getElementById('toDo').append(listElement);
     }
-
-    current_actions.push(newAction)
-
-    let fromInput = document.createElement('input')
-    fromInput.placeholder = 'Replace this string...'
-    fromInput.style.width = '100%'
-    fromInput.number = current_actions.length - 1;
-    fromInput.addEventListener('input', changeFromParameter)
-    let toInput = document.createElement('input')
-    toInput.placeholder = 'With this string...'
-    toInput.style.width = '100%'
-    toInput.number = current_actions.length - 1;
-    toInput.addEventListener('input', changeToParameter)
-    box.append(fromInput)
-    box.append(toInput)
-
-    document.getElementById('toDo').append(listElement);
+    else {
+        document.getElementsByClassName("error-msg")[0].innerText = '20 actions is maximum for one transformation!';
+    }
 }
 
 function removeItem() {
-    createGeneralItem('Remove:')
+    if (current_actions.length < 20) {
+        let listElement = createGeneralItem((current_actions.length + 1) + '. Remove text:')
+        let box = listElement.getElementsByTagName('div')[0]
+
+        let newAction = {
+            Action: 'Remove',
+            ParameterFrom: '',
+            ParameterTo: '',
+            Order: current_actions.length + 1,
+            DataResultId: null
+        }
+
+        current_actions.push(newAction)
+
+        let fromInput = document.createElement('input')
+        fromInput.placeholder = 'Remove this string (required)...'
+        fromInput.style.width = '100%'
+        fromInput.number = current_actions.length - 1;
+        fromInput.addEventListener('input', changeFromParameter)
+        box.append(fromInput)
+
+        document.getElementById('toDo').append(listElement);
+    }
+    else {
+        document.getElementsByClassName("error-msg")[0].innerText = '20 actions is maximum for one transformation!';
+    }
 }
 
 function insertAItem() {
-    createGeneralItem('Insert after:')
+    if (current_actions.length < 20) {
+        let listElement = createGeneralItem((current_actions.length + 1) + '. Insert text after text:')
+        let box = listElement.getElementsByTagName('div')[0]
+
+        let newAction = {
+            Action: 'Insert after',
+            ParameterFrom: '',
+            ParameterTo: '',
+            Order: current_actions.length + 1,
+            DataResultId: null
+        }
+
+        current_actions.push(newAction)
+
+        let fromInput = document.createElement('input')
+        fromInput.placeholder = 'Insert after (required)...'
+        fromInput.style.width = '100%'
+        fromInput.number = current_actions.length - 1;
+        fromInput.addEventListener('input', changeFromParameterInsertA)
+        let toInput = document.createElement('input')
+        toInput.placeholder = 'Insert this...'
+        toInput.style.width = '100%'
+        toInput.number = current_actions.length - 1;
+        toInput.addEventListener('input', changeToParameterInsertA)
+        box.append(fromInput)
+        box.append(toInput)
+
+        document.getElementById('toDo').append(listElement);
+    }
+    else {
+        document.getElementsByClassName("error-msg")[0].innerText = '20 actions is maximum for one transformation!';
+    }
 }
 
 function insertBItem() {
-    createGeneralItem('Insert Before:')
+    if (current_actions.length < 20) {
+        let listElement = createGeneralItem((current_actions.length + 1) + '. Insert text before text:')
+        let box = listElement.getElementsByTagName('div')[0]
+
+        let newAction = {
+            Action: 'Insert after',
+            ParameterFrom: '',
+            ParameterTo: '',
+            Order: current_actions.length + 1,
+            DataResultId: null
+        }
+
+        current_actions.push(newAction)
+
+        let fromInput = document.createElement('input')
+        fromInput.placeholder = 'Insert before (required)...'
+        fromInput.style.width = '100%'
+        fromInput.number = current_actions.length - 1;
+        fromInput.addEventListener('input', changeFromParameterInsertB)
+        let toInput = document.createElement('input')
+        toInput.placeholder = 'Insert this...'
+        toInput.style.width = '100%'
+        toInput.number = current_actions.length - 1;
+        toInput.addEventListener('input', changeToParameterInsertB)
+        box.append(fromInput)
+        box.append(toInput)
+
+        document.getElementById('toDo').append(listElement);
+    }
 }
 
 function createGeneralItem(name) {
@@ -92,7 +181,20 @@ function changeFromParameter(event) {
 function changeToParameter(event) {
     current_actions[event.currentTarget.number].ParameterTo = event.currentTarget.value
 }
-
+function changeFromParameterInsertA(event) {
+    current_actions[event.currentTarget.number].ParameterFrom = event.currentTarget.value
+    current_actions[event.currentTarget.number].ParameterTo = event.currentTarget.value + event.currentTarget.parentElement.getElementsByTagName('input')[1].value
+}
+function changeToParameterInsertA(event) {
+    current_actions[event.currentTarget.number].ParameterTo = event.currentTarget.parentElement.getElementsByTagName('input')[0].value + event.currentTarget.value
+}
+function changeFromParameterInsertB(event) {
+    current_actions[event.currentTarget.number].ParameterFrom = event.currentTarget.value
+    current_actions[event.currentTarget.number].ParameterTo = event.currentTarget.parentElement.getElementsByTagName('input')[1].value + event.currentTarget.value
+}
+function changeToParameterInsertB(event) {
+    current_actions[event.currentTarget.number].ParameterTo = event.currentTarget.value + event.currentTarget.parentElement.getElementsByTagName('input')[0].value
+}
 
 function convert() {
     if (current_version === null) {
@@ -101,12 +203,17 @@ function convert() {
     else if (current_actions.length === 0) {
         document.getElementsByClassName("error-msg")[0].innerText = 'No actions!';
     }
+    else if (current_actions.some((action) => action.ParameterFrom === "")) {
+        document.getElementsByClassName("error-msg")[0].innerText = 'Action with number ' +
+            (current_actions.findIndex((action) => action.ParameterFrom === "") + 1) + ' has empty required parameter!';
+    }
     else {
         document.getElementsByClassName("error-msg")[0].innerText = '';
 
         let toSend = {
             Data: current_version,
-            ToDo: current_actions
+            ToDo: current_actions,
+            FileName: filename
         }
         
         $.ajax({
@@ -121,6 +228,12 @@ function convert() {
             },
             error: function (data) {
                 console.log(data)
+                if (data.status === 413) {
+                    document.getElementsByClassName("error-msg")[0].innerText = 'File content is too large!';
+                }
+                else if (data.status === 500) {
+                    document.getElementsByClassName("error-msg")[0].innerText = 'Your actions caused the file to become too large to handle!';
+                }
             }
         });
     }

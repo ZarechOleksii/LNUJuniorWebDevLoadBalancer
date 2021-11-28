@@ -38,6 +38,7 @@ namespace LoadBalancer.Controllers
 
                 var DataResult = new DataResult(user.Id);
 
+                DataResult.SourceName = model.FileName;
                 DataResult.Actions = model.ToDo;
                 DataResult.Before = model.Data;
 
