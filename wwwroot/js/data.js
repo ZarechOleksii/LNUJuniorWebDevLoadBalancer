@@ -210,34 +210,58 @@ function convert() {
     else {
         document.getElementsByClassName("error-msg")[0].innerText = '';
 
-        let toSend = {
-            Data: current_version,
-            ToDo: current_actions,
-            FileName: filename
-        }
-        
-        $.ajax({
-            type: 'POST',
-            data: JSON.stringify(toSend),
-            contentType: "application/json",
-            url: '/Data/StartJob',
-            success: function (data) {
-                document.getElementById('download_button').setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data.after))
-                document.getElementById('download_button').setAttribute('download', filename.split('.').slice(0, -1).join('.') + 'Transformed.txt')
-                document.getElementById('download_button').style.display = 'block'
-            },
-            error: function (data) {
-                console.log(data)
-                if (data.status === 413) {
-                    document.getElementsByClassName("error-msg")[0].innerText = 'File content is too large!';
-                }
-                else if (data.status === 500) {
-                    document.getElementsByClassName("error-msg")[0].innerText = 'Your actions caused the file to become too large to handle!';
-                }
-                else if (data.status === 503) {
-                    document.getElementsByClassName("error-msg")[0].innerText = 'You already have a running job, please wait.';
-                }
-            }
+        var connection = new signalR.HubConnectionBuilder().withUrl("/status").build();
+        document.getElementById('status-list').innerHTML = "";
+
+        connection.on("ReceiveMessage", function (data) {
+            let li = document.createElement('li');
+            li.innerText = data;
+            document.getElementById('status-list').append(li);
         });
+
+        connection.start().then(function () {
+            let li = document.createElement('li');
+            li.innerText = 'Connected to server';
+            document.getElementById('status-list').append(li);
+
+            connection.invoke('GetConnectionId')
+                .then(function (connection_id) {
+                    let toSend = {
+                        Data: current_version,
+                        ToDo: current_actions,
+                        FileName: filename,
+                        SignalRConnectionId: connection_id
+                    }
+
+                    $.ajax({
+                        type: 'POST',
+                        data: JSON.stringify(toSend),
+                        contentType: "application/json",
+                        url: '/Data/StartJob',
+                        success: function (data) {
+                            document.getElementById('download_button').setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data.after))
+                            document.getElementById('download_button').setAttribute('download', filename.split('.').slice(0, -1).join('.') + 'Transformed.txt')
+                            document.getElementById('download_button').style.display = 'block'
+                            connection.stop();
+                        },
+                        error: function (data) {
+                            console.log(data)
+                            if (data.status === 413) {
+                                document.getElementsByClassName("error-msg")[0].innerText = 'File content is too large!';
+                            }
+                            else if (data.status === 500) {
+                                document.getElementsByClassName("error-msg")[0].innerText = 'Your actions caused the file to become too large to handle!';
+                            }
+                            else if (data.status === 503) {
+                                document.getElementsByClassName("error-msg")[0].innerText = 'You already have a running job, please wait.';
+                            }
+                            connection.stop();
+                        }
+                    });
+                })
+        })
+            .catch(function (err) {
+                return console.error(err)
+            });
     }
 }

@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
+using LoadBalancer.Hubs;
 
 namespace LoadBalancer
 {
@@ -74,6 +75,7 @@ namespace LoadBalancer
             {
                 options.LoginPath = new PathString("/Account/Login");
             });
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -102,6 +104,7 @@ namespace LoadBalancer
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapHub<StatusHub>("/status");
             });
         }
     }
