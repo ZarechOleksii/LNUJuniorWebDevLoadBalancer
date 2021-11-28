@@ -35,6 +35,7 @@ namespace LoadBalancer.Models.Entities
 
         public bool InProgress { get; set; }
 
+        public bool Errored { get; set; }
         public DataResult(string userId)
         {
             SourceName = "";
@@ -44,6 +45,7 @@ namespace LoadBalancer.Models.Entities
             DateTime = DateTime.Now;
             TimeSpan = TimeSpan.Zero;
             InProgress = true;
+            Errored = false;
         }
     }
 }

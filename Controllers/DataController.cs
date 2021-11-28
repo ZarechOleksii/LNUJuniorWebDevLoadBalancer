@@ -4,6 +4,7 @@ using LoadBalancer.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,36 +29,53 @@ namespace LoadBalancer.Controllers
             return View();
         }
 
-        [DisableRequestSizeLimit]
         [HttpPost]
         public async Task<IActionResult> StartJobAsync([FromBody] DataTransformViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var user = await _userManager.GetUserAsync(User);
-
-                var DataResult = new DataResult(user.Id);
-
-                DataResult.SourceName = model.FileName;
-                DataResult.Actions = model.ToDo;
-                DataResult.Before = model.Data;
-
-                string content = DataResult.Before;
-
-                foreach (var x in DataResult.Actions.OrderBy(v => v.Order))
+                var result = await _context.DataResults.FirstOrDefaultAsync(v => v.InProgress && v.UserId == user.Id);
+                if (result is not null)
                 {
-                    content = x.DoAction(content);
+                    var DataResult = new DataResult(user.Id);
+
+                    DataResult.SourceName = model.FileName;
+                    DataResult.Actions = model.ToDo;
+                    DataResult.Before = model.Data;
+                    await _context.SaveChangesAsync();
+
+                    string content = DataResult.Before;
+
+                    try
+                    {
+                        foreach (var x in DataResult.Actions.OrderBy(v => v.Order))
+                        {
+                            content = x.DoAction(content);
+                        }
+
+                        DataResult.After = content;
+                        DataResult.TimeSpan = DateTime.Now - DataResult.DateTime;
+                        DataResult.InProgress = false;
+                    }
+                    catch (OutOfMemoryException)
+                    {
+                        DataResult.After = "";
+                        DataResult.TimeSpan = DateTime.Now - DataResult.DateTime;
+                        DataResult.InProgress = false;
+                        DataResult.Errored = true;
+                    }
+
+                    await _context.DataResults.AddAsync(DataResult);
+
+                    await _context.SaveChangesAsync();
+
+                    return Ok(DataResult);
                 }
-
-                DataResult.After = content;
-                DataResult.TimeSpan = DateTime.Now - DataResult.DateTime;
-                DataResult.InProgress = false;
-
-                await _context.DataResults.AddAsync(DataResult);
-
-                await _context.SaveChangesAsync();
-
-                return Ok(DataResult);
+                else
+                {
+                    return StatusCode(503);
+                }
             }
             else
             {
@@ -65,43 +83,38 @@ namespace LoadBalancer.Controllers
             }
         }
 
-/*        [HttpPost]
-        public async Task<IActionResult> DoActionAsync(DataTransformViewModel model)
+        public async Task<IActionResult> GetJobsAsync()
         {
-            if (ModelState.IsValid)
+            if(ModelState.IsValid)
             {
-                var action = model.ToDo;
-                action.DataResult.Actions.Add(action);
-                await _context.ReplaceActions.AddAsync(action);
-                _context.DataResults.Update(action.DataResult);
-                await _context.SaveChangesAsync();
-                var result = action.DoAction(model.Data);
-                _context.ReplaceActions.Update(action);
-                await _context.SaveChangesAsync();
-                return Ok(result);
+                var user = await _userManager.GetUserAsync(User);
+                var jobs = await _context.DataResults
+                    .Where(v => v.UserId == user.Id)
+                    .OrderByDescending(v => v.DateTime)
+                    .Select(v => new
+                    {
+                        v.SourceName,
+                        v.DateTime,
+                        v.TimeSpan,
+                        v.InProgress,
+                        v.Errored
+                    })
+                    .Select(v => new DataResultsViewModel()
+                    {
+                        SourceName = v.SourceName,
+                        DateTime = v.DateTime,
+                        TimeSpan = v.TimeSpan,
+                        InProgress = v.InProgress,
+                        Errored = v.Errored
+                    })
+                    .ToListAsync();
+
+                return View(jobs);
             }
             else
             {
                 return BadRequest();
             }
         }
-
-        [HttpPost]
-        public async Task<IActionResult> DataResultDoneAsync(JobDoneViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                model.DataResult.After = model.Data;
-                model.DataResult.TimeSpan = DateTime.Now - model.DataResult.DateTime;
-                model.DataResult.InProgress = false;
-                _context.DataResults.Update(model.DataResult);
-                await _context.SaveChangesAsync();
-                return Ok();
-            }
-            else
-            {
-                return BadRequest();
-            }
-        }*/
     }
 }

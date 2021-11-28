@@ -1,0 +1,41 @@
+﻿@model List<LoadBalancer.Models.ViewModels.DataResultsViewModel>
+
+@{
+    ViewData["Title"] = "Jobs";
+}
+
+<head>
+    <link rel="stylesheet" href="~/css/jobs.css" />
+</head>
+
+<div class="text-center">
+    <h1>All your jobs:</h1>
+    <table class="job-table">
+        <tr>
+            <th>#</th>
+            <th>Original File name</th>
+            <th>Start time</th>
+            <th>Run time</th>
+            <th>Is running</th>
+            <th>Errored</th>
+        </tr>
+        @{
+            for (int i = 0; i < Model.Count; i++)
+            {
+                <tr>
+                    <td>@(i + 1)</td>
+
+                    <td>@Model[i].SourceName</td>
+
+                    <td>@Model[i].DateTime</td>
+
+                    <td>@Model[i].TimeSpan</td>
+
+                    <td>@Model[i].InProgress</td>
+
+                    <td>@Model[i].Errored</td>
+                </tr>
+            }
+        }
+    </table>
+</div>

@@ -27,7 +27,7 @@
                             if (User.Identity.IsAuthenticated)
                             {
                                 <li>
-                                    <a class="nav-link text-dark" asp-controller="Account" asp-action="Index">@User.Identity.Name</a>
+                                    <a class="nav-link text-dark" asp-controller="Data" asp-action="GetJobs">@User.Identity.Name</a>
                                 </li>
                                 <li>
                                     <form method="post" asp-controller="Account" asp-action="Logout">

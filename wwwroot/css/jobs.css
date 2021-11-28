@@ -1,0 +1,29 @@
+﻿.job-table {
+    table-layout: auto;
+    width: 100%;
+    border: 3px solid black;
+    font-size: 24px;
+    max-width: 100%;
+}
+    .job-table td, th {
+        max-width: 300px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .job-table tr + tr {
+        border-bottom: 2px solid black;
+    }
+
+    .job-table tr:first-child {
+        border-bottom: 2px solid black;
+    }
+
+    .job-table td + td, th + th {
+        border-right: 1px solid black;
+    }
+
+    .job-table td:first-child, th:first-child {
+        border-right: 1px solid black;
+    }

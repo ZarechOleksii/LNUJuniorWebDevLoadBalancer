@@ -234,6 +234,9 @@ function convert() {
                 else if (data.status === 500) {
                     document.getElementsByClassName("error-msg")[0].innerText = 'Your actions caused the file to become too large to handle!';
                 }
+                else if (data.status === 503) {
+                    document.getElementsByClassName("error-msg")[0].innerText = 'You already have a running job, please wait.';
+                }
             }
         });
     }
