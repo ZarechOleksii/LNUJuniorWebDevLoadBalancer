@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -42,6 +41,7 @@ namespace LoadBalancer.Controllers
                 var result = await _context.DataResults.FirstOrDefaultAsync(v => v.InProgress && v.UserId == user.Id);
                 if (result is null)
                 {
+                    await _hub.Clients.Client(model.SignalRConnectionId).SendAsync("ReceiveMessage", $"Working machine: { Environment.MachineName }");
                     await _hub.Clients.Client(model.SignalRConnectionId).SendAsync("ReceiveMessage", "Received Data on Server");
 
                     var DataResult = new DataResult(user.Id);
@@ -97,7 +97,7 @@ namespace LoadBalancer.Controllers
 
         public async Task<IActionResult> GetJobsAsync()
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var user = await _userManager.GetUserAsync(User);
                 var jobs = await _context.DataResults

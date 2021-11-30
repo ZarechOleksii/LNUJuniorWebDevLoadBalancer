@@ -3,10 +3,7 @@ using LoadBalancer.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace LoadBalancer.Controllers
@@ -54,7 +51,7 @@ namespace LoadBalancer.Controllers
                 }
                 else
                 {
-                    foreach(var err in result.Errors)
+                    foreach (var err in result.Errors)
                     {
                         ModelState.AddModelError(string.Empty, err.Description);
                     }

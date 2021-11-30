@@ -1,0 +1,42 @@
+version: '3'
+services:
+  postgres:
+    ports:
+      - '5432:5432'
+    container_name: database
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=12345
+    volumes: 
+      - ./postgres-data:/var/lib/postgresql/data
+    image: 'postgres:10.5'
+    networks:
+      - some-network
+
+  nginx:
+    image: nginx:alpine
+    hostname: 'nginx'
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/certificate/localhost.crt:/etc/ssl/certs/localhost.crt:ro
+      - ./nginx/certificate/localhost.key:/etc/ssl/certs/localhost.key:ro
+    ports:
+      - '85:85'
+      - '443:443'
+    depends_on:
+      - api
+    restart: always
+    networks:
+      - some-network
+
+  api:
+    build: ./
+    ports:
+      - '5000'
+    restart: always
+    networks:
+      - some-network
+
+networks:
+  some-network:
+    driver: bridge
