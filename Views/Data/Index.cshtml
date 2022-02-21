@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "Data";
+}
+<head>
+    <link rel="stylesheet" href="~/css/data.css" />
+</head>
+
+<div class="text-center">
+    <h1>Text converter</h1>
+    <div class="column-holder">
+        <div class="three-column">
+            <h4>Available actions:</h4>
+            <ul class="action-list">
+                <li>
+                    <button class="action-list-item" onclick="replaceItem()">Replace text with text</button>
+                </li>
+                <li>
+                    <button class="action-list-item" onclick="removeItem()">Remove text</button>
+                </li>
+                <li>
+                    <button class="action-list-item" onclick="insertAItem()">Insert text After text</button>
+                </li>
+                <li>
+                    <button class="action-list-item" onclick="insertBItem()">Insert text before text</button>
+                </li>
+            </ul>
+        </div>
+        <div class="three-column">
+            <h4>To do:</h4>
+            <ol class="action-list" id="toDo">
+
+            </ol>
+        </div>
+        <div class="three-column">
+            <h3 class="error-msg"></h3>
+            <input type="file" id="upload" />
+            <button onclick="convert()">Convert</button>
+            <ul id="status-list">
+
+            </ul>
+            <a class="download-file" id="download_button" href="" download=""> Downlaod </a>
+        </div>
+    </div>
+    
+</div>
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script language="JavaScript" type="text/javascript" src="~/js/data.js"></script>

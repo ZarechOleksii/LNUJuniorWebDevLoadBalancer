@@ -1,5 +1,3 @@
-using System;
-
 namespace LoadBalancer.Models.ViewModels
 {
     public class ErrorViewModel

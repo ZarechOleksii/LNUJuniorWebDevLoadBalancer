@@ -1,0 +1,67 @@
+version: '3'
+
+networks:
+  some-network:
+    driver: bridge
+
+# volumes:
+#   postgresshare:
+#     driver: azure_file
+#     driver_opts:
+#      share_name: postgresshare
+#      storage_account_name: loadbalancerlnustorage
+
+services:
+
+  postgres:
+    ports:
+      - '5432:5432'
+    container_name: database
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      PGDATA: /tmp
+    # volumes: 
+    #   - postgresshare:/var/lib/postgresql/data
+    image: postgres:latest
+    networks:
+      - some-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+
+  api1:
+    image: mycrregistry.azurecr.io/loadbalancer/api
+    environment:
+      - ASPNETCORE_URLS=http://*:5000
+    ports:
+      - '5000'
+    restart: always
+    networks:
+      - some-network
+
+  api2:
+    image: mycrregistry.azurecr.io/loadbalancer/api
+    environment:
+      - ASPNETCORE_URLS=http://*:5001
+    ports:
+      - '5001'
+    restart: always
+    networks:
+      - some-network
+
+
+  nginx:
+    image: nginx
+    hostname: 'nginx'
+    ports:
+      - '85:85'
+      - '443:443'
+    restart: always
+    networks:
+      - some-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
